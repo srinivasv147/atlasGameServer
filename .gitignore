@@ -1,2 +1,5 @@
 node_modules/*
 .DS_Store
+/config/configDB.js
+/config/configPassport.js
+/config/auth.js
