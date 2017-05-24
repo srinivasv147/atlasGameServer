@@ -37,7 +37,7 @@ fs.readFile(fileName,'utf8',function(err,data){
   });
   var len = placeNames.length;
   console.log(len);
-  MongoClient.connect("mongodb://localhost:27017/userData",
+  MongoClient.connect(configDB.url,
   function(err,db){
     var col = db.collection('places');
     var batch = col.initializeUnorderedBulkOp();
