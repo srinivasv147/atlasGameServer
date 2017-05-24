@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.use(session({ secret: 'SrinivasV147' }));
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public','static')));
 
 // app.use('/', index);
 // app.use('/users', users);
