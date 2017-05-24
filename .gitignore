@@ -3,3 +3,4 @@ node_modules/*
 /config/configDB.js
 /config/configPassport.js
 /config/auth.js
+*.log
