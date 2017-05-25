@@ -1,3 +1,5 @@
+var Place = require('../models/place.js');
+
 module.exports = function(app,passport){
   console.log("function executed");
 
@@ -14,15 +16,22 @@ module.exports = function(app,passport){
   //   //here we get login info.
   // });
 
-  app.get('/profile',isLoggedIn,function(req,res){
-    res.render('../public/profile.ejs')
+  app.get('/play',isLoggedIn,function(req,res){
+    res.render('../public/play.ejs')
+  });
+
+  app.post('/play',isLoggedIn,function(req,res){
+    var rec = req.body.place[req.body.place.length - 1].toLowerCase();
+    Place.findOne({startLetter : rec},function(err,new_place){
+      res.json({place : new_place.name});
+    });
   });
 
   app.get('/auth/google',passport.authenticate('google',{'scope':['profile','email']}));
 
   app.get('/auth/google/callback',passport.authenticate(
     'google',{
-      successRedirect : '/profile',
+      successRedirect : '/play',
       failureRedirect : '/'
     }
   ));
@@ -35,7 +44,7 @@ module.exports = function(app,passport){
 };
 
 function isLoggedIn (req,res,next){
-  console.log(req.isAuthenticated.toString());
+  // console.log(req.isAuthenticated.toString());
   if(req.isAuthenticated()){
     return next();
   }
