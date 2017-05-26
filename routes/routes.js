@@ -1,4 +1,5 @@
 var Place = require('../models/place.js');
+var User = require('../models/user.js')
 
 module.exports = function(app,passport){
   console.log("function executed");
@@ -22,8 +23,41 @@ module.exports = function(app,passport){
 
   app.post('/play',isLoggedIn,function(req,res){
     var rec = req.body.place[req.body.place.length - 1].toLowerCase();
-    Place.findOne({startLetter : rec},function(err,new_place){
-      res.json({place : new_place.name});
+    var input = req.body.place.toLowerCase();
+    Place.findOne({name : input},function(err,ret){
+      if(err){
+        res.render('../views/error.ejs');
+      }
+      if(!ret){
+        res.json({error : "no place called "+input+" in our database"});
+      }
+      else{
+        // console.log(req.user);
+        User.findOne({'google.id' : req.user.google.id},function(err,pres_user){
+          if(err){
+            res.render('../views/error.ejs');
+          }
+          // console.log(pres_user);
+          if(pres_user.played.indexOf(input) !== -1){
+            res.json({error : "sorry the place "+input+" has already been played"});
+          }
+          else{
+            pres_user.played.push(input);
+            Place.findOne({startLetter : rec},function(err,new_place){
+              if(err){
+                res.render('../views/error.ejs');
+              }
+              pres_user.played.push(new_place.name);
+              pres_user.save(function(err,done){
+                if(err){
+                  res.render('../views/error.ejs');
+                }
+              });
+              res.json({place : new_place.name});
+            });
+          }
+        });
+      }
     });
   });
 

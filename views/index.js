@@ -21,10 +21,20 @@ var App = React.createClass(
       axios.post(url,{
         place : this.state.user
       }).then(
-        function(data){self.setState({
-          opponent : data.data.place,
-          hasPlayed : false
-        })}
+        function(data){
+          if(data.data.place){
+            self.setState({
+              opponent : data.data.place,
+              hasPlayed : false
+            });
+          }
+          else{
+            self.setState({
+              opponent : data.data.error,
+              hasPlayed : false
+            });
+          }
+        }
       );
     },
     render : function(){return (<div id="game">welcome to atlas

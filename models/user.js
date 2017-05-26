@@ -6,7 +6,8 @@ var userSchema = mongoose.Schema({
     token : String,
     email : String,
     name : String
-  }
+  },
+  played : [{type : String}]
 });
 
 module.exports = mongoose.model('User',userSchema);
