@@ -38,12 +38,23 @@ module.exports = function(app,passport){
             res.render('../views/error.ejs');
           }
           // console.log(pres_user);
+          var latest = pres_user.played[pres_user.played.length - 1];
           if(pres_user.played.indexOf(input) !== -1){
             res.json({error : "sorry the place "+input+" has already been played"});
           }
+          else if(input[0] !== latest[latest.length - 1]){
+            res.json(
+              {error :
+                "your place "
+                +input+" does not start with "+latest[latest.length - 1]+
+                " the last letter of "+latest
+              });
+          }
           else{
             pres_user.played.push(input);
-            Place.findOne({startLetter : rec},function(err,new_place){
+            // console.log(pres_user.played);
+            Place.findOne({startLetter : rec , name : {"$nin" : pres_user.played}},
+              function(err,new_place){
               if(err){
                 res.render('../views/error.ejs');
               }
